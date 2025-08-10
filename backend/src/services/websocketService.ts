@@ -136,7 +136,7 @@ export class WebSocketService {
     });
 
     // Handle Redis messages
-    this.redisSubscriber.on('message', (channel, message) => {
+    this.redisSubscriber.on('pmessage', (pattern, channel, message) => {
       try {
         const redisMessage: RedisMessage = JSON.parse(message);
         
@@ -151,8 +151,6 @@ export class WebSocketService {
           };
           this.sendToUser(redisMessage.userId, wsMessage);
           console.log(`📤 Sent log to WebSocket client for user ${redisMessage.userId}`);
-        } else {
-            this.broadcast(redisMessage)
         }
       } catch (error) {
         console.error('❌ Error processing Redis message:', error);
@@ -160,12 +158,12 @@ export class WebSocketService {
     });
 
     // Subscribe to Redis channels for all users
-    this.redisSubscriber.subscribe('logs', (err) => {
+    this.redisSubscriber.psubscribe('logs:*', (err, count) => {
       if (err) {
         console.error('❌ Failed to subscribe to Redis channels:', err);
         return;
       }
-      console.log(`📡 Subscribed to Redis pattern 'logs'`);
+      console.log(`📡 Subscribed to Redis pattern 'logs:*'. Total subscriptions: ${count}`);
     });
   }
 

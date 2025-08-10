@@ -76,4 +76,4 @@ export class IngestionController {
       return ResponseUtil.serverError(res, 'Failed to ingest trace');
     }
   }
-} 
+}
