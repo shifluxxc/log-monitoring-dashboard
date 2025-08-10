@@ -1,0 +1,27 @@
+# Server Configuration
+PORT=7000
+NODE_ENV=development
+
+# Database Configuration (Docker)
+# These settings work with the docker-compose.yml PostgreSQL setup
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=log_management
+DB_USER=postgres
+DB_PASSWORD=password
+
+# Alternative: If running database on a different host
+# DB_HOST=your-database-host
+# DB_PORT=5432
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRES_IN=24h
+
+# Redis Configuration
+REDIS_HOST=localhost
+REDIS_PORT=6379
+# REDIS_PASSWORD=your_redis_password
+
+# Optional: Enable detailed logging
+DEBUG=false 

@@ -17,6 +17,11 @@ const logReducer = (state: LogState, action: LogAction): LogState => {
         ...state,
         logs: [action.payload, ...state.logs].slice(0, 10000), // Keep only last 10k logs
       };
+    case 'SET_LOGS':
+      return {
+        ...state,
+        logs: action.payload,
+      };
     case 'SET_FILTER':
       return {
         ...state,

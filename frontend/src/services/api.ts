@@ -1,4 +1,4 @@
-import { User } from '@/types';
+import { User, Log } from '@/types';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://api.example.com' 
@@ -51,6 +51,11 @@ class ApiService {
       user: response.user,
       token: response.accessToken,
     };
+  }
+
+  // Logs
+  async getLogs(limit: number = 100, offset: number = 0): Promise<Log[]> {
+    return this.request(`/api/logs?limit=${limit}&offset=${offset}`);
   }
 
   // Metrics

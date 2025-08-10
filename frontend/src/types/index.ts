@@ -2,7 +2,8 @@
 
 export interface Log {
   id: string;
-  level: 'INFO' | 'WARN' | 'ERROR';
+  user_id: string;
+  level: 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
   message: string;
   timestamp: string;
   metadata: Record<string, any>;
@@ -38,6 +39,7 @@ export type AuthAction =
 
 export type LogAction = 
   | { type: 'ADD_LOG'; payload: Log }
+  | { type: 'SET_LOGS'; payload: Log[] }
   | { type: 'SET_FILTER'; payload: Partial<LogFilters> };
 
 export interface ChartData {

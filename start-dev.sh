@@ -8,9 +8,9 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Start PostgreSQL with TimescaleDB
-echo "🐘 Starting PostgreSQL with TimescaleDB..."
-docker-compose up -d postgres
+# Start PostgreSQL and Redis
+echo "🐘 Starting PostgreSQL and Redis..."
+docker-compose up -d postgres redis
 
 # Wait for database to be ready
 echo "⏳ Waiting for database to be ready..."
@@ -23,5 +23,13 @@ echo "✅ Database is ready!"
 
 # Start the backend application
 echo "🔧 Starting backend application..."
-cd backend
-npm run dev 
+(cd backend && npm run dev) &
+BACKEND_PID=$!
+
+# Start the frontend application in a new terminal
+echo "🎨 Starting frontend application..."
+(cd frontend && npm run dev) &
+FRONTEND_PID=$!
+
+# Wait for both processes to exit
+wait $BACKEND_PID $FRONTEND_PID

@@ -1,8 +1,12 @@
 import express, { Application, Request, Response } from "express";
 import "dotenv/config";
 import cors from "cors";
+import http from 'http';
 import { initializeDatabase } from './config/init-db.js';
 import authRoutes from './routes/auth.js';
+import ingestionRoutes from './routes/ingestion.js';
+import logRoutes from './routes/logs.js';
+import { WebSocketService } from './services/websocketService.js';
 
 const app: Application = express();
 const PORT = process.env.PORT || 7000;
@@ -14,6 +18,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // * Routes
 app.use('/auth', authRoutes);
+app.use('/', ingestionRoutes);
+app.use('/api', logRoutes);
 
 // * Health check endpoint
 app.get("/", (req: Request, res: Response) => {
@@ -43,11 +49,19 @@ async function startServer() {
     // Initialize database
     await initializeDatabase();
     
+    // Create HTTP server
+    const server = http.createServer(app);
+    
+    // Initialize WebSocket service
+    const wsService = new WebSocketService(server);
+    
     // Start server
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 Server is running on PORT ${PORT}`);
       console.log(`📊 Health check: http://localhost:${PORT}/`);
       console.log(`🔐 Auth endpoints: http://localhost:${PORT}/auth/`);
+      console.log(`📡 WebSocket endpoint: ws://localhost:${PORT}/ws/logs`);
+      console.log(`📤 Ingestion endpoints: http://localhost:${PORT}/ingest/`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
