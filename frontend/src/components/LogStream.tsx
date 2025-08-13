@@ -52,18 +52,9 @@ export const LogStream: React.FC = () => {
   const handleNewLog = useCallback((newLog: Log) => {
     // Only add logs for the current user
     if (authState.user?.id === newLog.user_id) {
-      dispatch({ type: 'ADD_LOG', payload: newLog });
-      
-      // Auto-scroll to bottom if enabled
-      if (autoScroll && scrollAreaRef.current) {
-        setTimeout(() => {
-          if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-          }
-        }, 100);
-      }
+        dispatch({ type: 'ADD_LOG', payload: newLog });
     }
-  }, [authState.user?.id, dispatch, autoScroll]);
+  }, [authState.user?.id, dispatch]);
 
   const onConnect = useCallback(() => {
     toast({
@@ -123,6 +114,16 @@ export const LogStream: React.FC = () => {
   }, [authState.token, dispatch]);
 
   const { filteredLogs } = useLog().state;
+
+  useEffect(() => {
+    if (autoScroll && scrollAreaRef.current) {
+        setTimeout(() => {
+          if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+          }
+        }, 100);
+      }
+  }, [filteredLogs, autoScroll])
 
   return (
     <Card className="h-full flex flex-col bg-card text-card-foreground">

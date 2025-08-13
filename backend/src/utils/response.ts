@@ -30,6 +30,10 @@ export class ResponseUtil {
   static created<T>(res: Response, data: T, message?: string) {
     return this.success(res, data, message, 201);
   }
+
+  static accepted<T>(res: Response, message?: string) {
+    return this.success(res, undefined, message, 202);
+  }
   
   static notFound(res: Response, message: string = 'Resource not found') {
     return this.error(res, message, undefined, 404);
@@ -50,4 +54,4 @@ export class ResponseUtil {
   static serverError(res: Response, message: string = 'Internal server error') {
     return this.error(res, message, undefined, 500);
   }
-} 
+}

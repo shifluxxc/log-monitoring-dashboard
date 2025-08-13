@@ -6,6 +6,7 @@ import { initializeDatabase } from './config/init-db.js';
 import authRoutes from './routes/auth.js';
 import ingestionRoutes from './routes/ingestion.js';
 import logRoutes from './routes/logs.js';
+import traceRoutes from './routes/traces.js';
 import { WebSocketService } from './services/websocketService.js';
 
 const app: Application = express();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRoutes);
 app.use('/', ingestionRoutes);
 app.use('/api', logRoutes);
+app.use('/api/traces', traceRoutes);
 
 // * Health check endpoint
 app.get("/", (req: Request, res: Response) => {

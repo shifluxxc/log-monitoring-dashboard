@@ -45,7 +45,7 @@ export const useWebSocket = ({
 
     try {
       console.log('🔌 Attempting WebSocket connection...');
-      const wsUrl = `ws://localhost:7000/ws/logs?token=${state.token}`;
+      const wsUrl = `ws://localhost:7000/ws/realtime?token=${state.token}`;
       wsRef.current = new WebSocket(wsUrl);
 
       wsRef.current.onopen = () => {
@@ -67,6 +67,9 @@ export const useWebSocket = ({
             case 'message':
               onMessage(message.data);
               break;
+            case 'trace:new':
+              console.log('📊 New trace received:', message.data) ;
+              // onMessage(message.data);
             case 'auth:success':
               console.log('✅ WebSocket authenticated successfully');
               break;

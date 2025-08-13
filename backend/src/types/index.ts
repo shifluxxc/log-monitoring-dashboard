@@ -46,17 +46,10 @@ export interface Trace {
   trace_id: string;
   user_id: string;
   root_span_name: string;
-  start_time_unix_nano: number;
-  duration_nano: number;
+  start_time_unix_nano: string;
+  duration_nano: string;
   span_count: number;
   created_at: Date;
-}
-
-export interface CreateTraceRequest {
-  root_span_name: string;
-  start_time_unix_nano: number;
-  duration_nano: number;
-  span_count: number;
 }
 
 export interface Span {
@@ -64,18 +57,27 @@ export interface Span {
   trace_id: string;
   parent_span_id?: string;
   name: string;
-  start_time_unix_nano: number;
-  end_time_unix_nano: number;
+  start_time_unix_nano: string;
+  end_time_unix_nano: string;
   attributes?: Record<string, any>;
+  serviceName?: string;
 }
 
-export interface CreateSpanRequest {
-  trace_id: string;
-  parent_span_id?: string;
+export interface TracePayload {
+  traceId: string;
+  spans: SpanPayload[];
+}
+
+export interface SpanPayload {
+  id: string;
+  traceId: string;
+  parentId?: string;
   name: string;
-  start_time_unix_nano: number;
-  end_time_unix_nano: number;
-  attributes?: Record<string, any>;
+  startTime: number;
+  endTime: number;
+  duration: number;
+  serviceName: string;
+  tags?: Record<string, any>;
 }
 
 export interface JwtPayload {
@@ -83,4 +85,4 @@ export interface JwtPayload {
   email: string;
   iat?: number;
   exp?: number;
-} 
+}

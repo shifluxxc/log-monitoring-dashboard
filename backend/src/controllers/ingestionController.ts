@@ -68,12 +68,29 @@ export class IngestionController {
         return ResponseUtil.unauthorized(res, 'User not authenticated');
       }
 
-      // TODO: Implement trace ingestion
-      // This will be implemented in Sprint 2
-      return ResponseUtil.success(res, { message: 'Trace ingestion endpoint - coming in Sprint 2' });
+      const tracePayload: TracePayload = req.body;
+
+      if (!tracePayload.traceId || !tracePayload.spans || tracePayload.spans.length === 0) {
+        return ResponseUtil.validationError(res, {
+          error: 'Trace ID and at least one span are required',
+        });
+      }
+
+      const redisMessage = {
+        type: 'trace:new',
+        data: tracePayload,
+        userId: userId,
+        timestamp: new Date().toISOString()
+      };
+
+      await redisPublisher.publish(`traces:${userId}`, JSON.stringify(redisMessage));
+      console.log(`📤 Published trace to Redis channel traces:${userId}`);
+
+      return ResponseUtil.accepted(res, 'Trace accepted for processing');
     } catch (error) {
       console.error('❌ Trace ingestion error:', error);
       return ResponseUtil.serverError(res, 'Failed to ingest trace');
     }
   }
 }
+import { TracePayload } from '../types/index.js';
